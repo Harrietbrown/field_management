@@ -1,4 +1,5 @@
 import random
+import numpy as np
 from wheat_class import *
 from potato_class import *
 from sheep_class import *
@@ -100,36 +101,9 @@ def auto_grow(field,days):
 
 def manual_grow(field):
     #get light, food and water values from user
-    valid =False
-    while valid == False:
-        try:
-            light = int(input("Please enter a light value (1-10): "))
-            if 1<= light <=10:
-                valid = True
-            else:
-                print("Value entered is not valid.")
-        except ValueError:
-            print("Value entered is not valid")
-    valid = False
-    while valid == False:
-        try:
-            water = int(input("Please enter a water value (1-10): "))
-            if 1<=water<=10:
-                valid = True
-            else:
-                print("Value entered is not valid.")
-        except ValueError:
-            print("Value entered is not valid.")
-    valid = False
-    while valid == False:
-        try:
-            food = int(input("Please enter a food value (1-100): "))
-            if 1<=food<=100:
-                valid = True
-            else:
-                print("Value entered is not valid.")
-        except ValueError:
-            print("Value entered is not valid.")
+    light = select_option("Please enter a light value (1-10): ",1,10)
+    water = select_option("Please enter a water value (1-10): ",1,10)
+    food = select_option("Please enter a food value (1-100): ",1,10)
     field.grow(light,food,water)
 
 def display_crops(crop_list):
@@ -147,49 +121,22 @@ def display_animals(animal_list):
     for animal in animal_list:
         print("{0:>2}, {1}".format(pos,animal.report()))
         pos= pos + 1
-        print(pos)
-
-def select_crop(length_list):
-    valid = False
-    while not valid:
-        try:
-            selected = int(input("Please Select a Crop: "))
-            if selected in range(0,length_list+1):
-                valid = True
-            else:
-                print("please enter a valid option.")
-        except ValueError:
-            print("Please enter a valid option.")
-    return selected -1
-
-def select_animal(length_list):
-    valid = False
-    while not valid:
-        try:
-            selected = int(input("Please Select an animal: "))
-            if selected in range(0,length_list+1):
-                valid = True
-            else:
-                print("please select a valid option.")
-        except ValueError:
-            print("Please enter a valid option.")
-    return selected -1
 
 def harvest_crop_from_field(field):
     display_crops(field._crops)
-    selected_crop = select_crop(len(field._crops))
-    if selected_crop == -1:
+    selected = select_option("Please Select a Crop: ", 0, len(field._crops))
+    if selected == 0:
         return []
     else:
-        return field.harvest_crop(selected_crop)
+        return field.harvest_crop(selected-1)
 
 def remove_animal_from_field(field):
     display_animals(field._animals)
-    selected_animal = select_animal(len(field._animals))
-    if selected_animal == -1:
+    selected = select_option("Please Select an animal: ", 0, len(field._animals))
+    if selected == 0:
         return []
     else:
-        return field.remove_animal(selected_animal)
+        return field.remove_animal(selected-1)
 
 def welcome_message():
     print("----------------------------------------------------------")
@@ -234,22 +181,22 @@ def display_main_menu():
     print()
     print("Please select an option from the above menu")
 
-def select_option(lower, upper):
+def select_option(message, lower= -np.inf, upper=np.inf):
     valid = False
     while not valid:
         try:
-            choice = int(input("Option selected: "))
+            choice = int(input(message))
             if lower <= choice <= upper:
                 valid = True
             else:
-                print("Please enter avalid option.")
+                print("Please enter a valid option.")
         except ValueError:
             print("Please enter a valid option.")
     return choice
 
 def plant_crop_to_field(field):
     display_crop_menu()
-    choice = select_option(0,2)
+    choice = select_option("Option selected: ",0,2)
     if choice == 1:
         if field.plant_crop(Wheat()):
             print()
@@ -265,7 +212,7 @@ def plant_crop_to_field(field):
 
 def add_animal_to_field(field):
     display_animal_menu()
-    choice = select_option(0,2)
+    choice = select_option("Option selected: ",0,2)
     if choice == 1:
         name = input("What is this cow's name? ")
         if field.add_animal(Cow(name)):
@@ -286,7 +233,7 @@ def manage_field(field):
     exit = False
     while not exit:
         display_main_menu()
-        option = select_option(0,7)
+        option = select_option("Option selected: ",0,7)
         print()
         if option == 1:
             plant_crop_to_field(field)
@@ -323,7 +270,8 @@ def main():
     manage_field(new_field)
 
 
-main()
+if __name__ == "__main__":
+    main()
 
 
 

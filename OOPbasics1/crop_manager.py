@@ -139,3 +139,6 @@ def manage_crop(crop):
 def main():
     welcome_message()
     manage_crop(new_crop)
+
+if __name__=="__main__":
+    main()

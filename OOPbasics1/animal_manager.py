@@ -135,8 +135,4 @@ def manage_animal(animal):
             print(animal.report())
             print()
     print("thank you for using my program")
-
-
-def main():
-    welcome_message()
-    manage_animal(new_animal)
+    z
